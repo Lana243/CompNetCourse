@@ -1,3 +1,4 @@
+
 import argparse
 import socket
 import os
@@ -112,13 +113,13 @@ if __name__ == '__main__':
     seq = 0
     host_addr = socket.gethostbyname(host)
     ttl = 0
-
+    is_success = False
     print(f'Tracing route to {host} [{host_addr}]')
-    while True:
+
+    while not is_success:
         ttl += 1
         delays = []
         addr = None
-        is_success = False
         for _ in range(n_requests):
             seq += 1
             rtt, resp_type, resp_code, cur_addr = traceroute(host_addr, seq, ttl, timeout)
@@ -136,13 +137,11 @@ if __name__ == '__main__':
                 print(f'{ttl}  ' + ' '.join(delays))
                 continue
             try:
-                hostname = socket.gethostbyaddr(cur_addr[0])[0]
+                hostname = socket.gethostbyaddr(addr[0])[0]
             except socket.herror:
-                hostname = cur_addr[0]
-            print(f'{ttl}  {hostname} ({cur_addr[0]})  ', end='')
+                hostname = addr[0]
+            print(f'{ttl}  {hostname} ({addr[0]})  ', end='')
             if set(delays) == set('*'):
                 print(' '.join(delays))
             else:
                 print('  '.join(delays))
-            if is_success:
-                break
