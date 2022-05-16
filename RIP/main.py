@@ -48,16 +48,13 @@ def run_rip(network, is_simulation):
                 is_updated_now = start_router.update_dist(finish_router)
                 is_updated = is_updated_now or is_updated
 
+        if not is_updated:
+            break
+
         if is_simulation:
             for router in network:
                 print(f'Simulation step {step} of router {router.ip}')
                 print(router)
-
-        if not is_updated:
-            break
-
-        if step > 5:
-            break
 
     for router in network:
         print(f'Final state of router {router.ip} table:')
